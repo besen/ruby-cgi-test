@@ -4,28 +4,12 @@ require 'rubygems'
 require 'bundler/setup'
 require "rack"
 
-class Dispatcher
-	def call(env)
-		if env["SCRIPT_URI"] == "/cgi-bin/hello.rb"
-			['200', {'Content-Type' => 'text/html'}, ["Migrated Hello World"]]
-		else
-			['200', {'Content-Type' => 'text/html'}, [
-				"""
-				#{ENV['SCRIPT_URL']}
-				<br />
-				#{ENV['QUERY_STRING']}
-
-				"""
-				]
-			]
-		end
-	end
-end
+require_relative "../app/new-app.rb"
 
 app = Rack::Builder.new do
   use Rack::CommonLogger
   use Rack::ShowExceptions
-  run Dispatcher.new
+  run NewApp.new
 end
 
 Rack::Handler::CGI.run(app)
